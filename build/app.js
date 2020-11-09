@@ -26,6 +26,7 @@ function writeGuessedLettersToDOM(guessedLetters) {
 function writeAlphabetToTheDom() {
     const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
     const keyboard = document.querySelector("#keyboard");
+    keyboard.addEventListener("click", guessLetter);
     alphabet.forEach(function (element, index) {
         let divKey = document.createElement("div");
         divKey.id = element;
@@ -33,5 +34,30 @@ function writeAlphabetToTheDom() {
         divKey.innerHTML = element;
         keyboard.append(divKey);
     });
+}
+function guessLetter(event) {
+    const target = event.target;
+    if (target.id !== "keyboard") {
+        const clickedLetter = target.id;
+        const indexes = findLetter(clickedLetter);
+        if (indexes.length > 0) {
+            updateGuessedLettersOfWord(clickedLetter, indexes);
+            writeGuessedLettersToDOM(guessedLettersInWord);
+        }
+    }
+}
+function updateGuessedLettersOfWord(clickedLetter, indexes) {
+    indexes.forEach(function (index) {
+        guessedLettersInWord[index] = clickedLetter;
+    });
+}
+function findLetter(clickedLetter) {
+    let indexes = [];
+    for (let i = 0; i < lettersInWord.length; i++) {
+        if (lettersInWord[i] === clickedLetter) {
+            indexes.push(i);
+        }
+    }
+    return indexes;
 }
 //# sourceMappingURL=app.js.map

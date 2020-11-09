@@ -46,6 +46,7 @@ function writeGuessedLettersToDOM(guessedLetters: string[]) {
 function writeAlphabetToTheDom() {
   const alphabet: string[] = "abcdefghijklmnopqrstuvwxyz".split("");
   const keyboard: HTMLDivElement = document.querySelector("#keyboard");
+  keyboard.addEventListener("click", guessLetter);
   alphabet.forEach(function (element, index) {
     let divKey: HTMLDivElement = document.createElement("div");
     divKey.id = element;
@@ -53,4 +54,45 @@ function writeAlphabetToTheDom() {
     divKey.innerHTML = element;
     keyboard.append(divKey);
   });
+}
+
+/**
+ * Function to find the clicked letter
+ * @param event Event 
+ */
+function guessLetter(event: Event) {
+  const target: HTMLElement = event.target as HTMLElement;
+  if(target.id !== "keyboard") {
+    const clickedLetter = target.id;
+    const indexes: number[] = findLetter(clickedLetter);
+    if(indexes.length > 0) {
+      updateGuessedLettersOfWord(clickedLetter, indexes);
+      writeGuessedLettersToDOM(guessedLettersInWord);
+    }
+  }
+}
+
+/**
+ * Function to find the place of the clicked letter
+ * @param clickedLetter The clicked letter
+ * @param indexes The place of the letter
+ */
+function updateGuessedLettersOfWord(clickedLetter: string, indexes: number[]) {
+  indexes.forEach(function(index) {
+    guessedLettersInWord[index] = clickedLetter;
+  });  
+}
+
+/**
+ * Function to write the clicked letter to the string
+ * @param clickedLetter The clicked letter
+ */
+function findLetter(clickedLetter: string): number[] {
+  let indexes: number[] = [];
+  for(let i:number = 0; i < lettersInWord.length; i++) {
+    if(lettersInWord[i] === clickedLetter) {
+      indexes.push(i);
+    }
+  }
+  return indexes;
 }
